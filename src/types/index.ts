@@ -283,10 +283,107 @@ export interface AuditLogEntry {
   details: string;
 }
 
+export type UnitOfMeasure = 'KG' | 'GRAM' | 'LITER' | 'ML' | 'PIECE' | 'PACK';
+
+export interface Ingredient {
+  id: string;
+  sku: string;
+  name: string;
+  unit: UnitOfMeasure;
+  costPerUnit: number; // In minor units (e.g. 120000 = 1,200 BDT/kg)
+  currentStock: number;
+  parLevel: number;
+  reorderPoint: number;
+}
+
+export interface RecipeLine {
+  ingredientId: string;
+  ingredientName: string;
+  quantity: number;
+  unit: UnitOfMeasure;
+  wastagePct: number;
+}
+
+export interface Recipe {
+  id: string;
+  menuItemId: string;
+  menuItemName: string;
+  yieldServings: number;
+  lines: RecipeLine[];
+}
+
+export interface WastageLog {
+  id: string;
+  timestamp: string;
+  ingredientId: string;
+  ingredientName: string;
+  quantity: number;
+  unit: UnitOfMeasure;
+  reason: 'BURNT' | 'EXPIRED' | 'SPILLED' | 'QUALITY_DEFECT';
+  cost: number; // minor units
+  reportedByName: string;
+}
+
+export interface PurchaseOrderItem {
+  ingredientId: string;
+  ingredientName: string;
+  quantity: number;
+  unit: UnitOfMeasure;
+  unitCost: number; // minor units
+  totalCost: number;
+}
+
+export interface PurchaseOrder {
+  id: string;
+  poNumber: string;
+  supplierName: string;
+  items: PurchaseOrderItem[];
+  totalCost: number;
+  status: 'DRAFT' | 'SUBMITTED' | 'RECEIVED';
+  createdAt: string;
+  receivedAt?: string;
+}
+
+export interface StaffAttendance {
+  id: string;
+  userId: string;
+  userName: string;
+  role: string;
+  clockIn: string;
+  clockOut?: string;
+  breakMinutes: number;
+  overtimeMinutes: number;
+  status: 'ON_DUTY' | 'ON_BREAK' | 'CLOCKED_OUT';
+}
+
+export type ExpenseCategory = 'UTILITIES' | 'MAINTENANCE' | 'PANTRY_PURCHASE' | 'CLEANING' | 'MARKETING';
+
+export interface ExpenseVoucher {
+  id: string;
+  voucherNumber: string;
+  category: ExpenseCategory;
+  amount: number; // minor units
+  notes: string;
+  approvedByName: string;
+  createdAt: string;
+}
+
+export interface JournalEntry {
+  id: string;
+  date: string;
+  accountCode: string;
+  accountName: string;
+  debit: number;
+  credit: number;
+  refId: string;
+  description: string;
+}
+
 export type PortalApp = 
   | 'POS_TERMINAL'
   | 'KITCHEN_DISPLAY'
   | 'ADMIN_DASHBOARD'
+  | 'OPERATIONS_HUB'
   | 'CUSTOMER_QR'
   | 'WAITER_HANDHELD'
   | 'CUSTOMER_DISPLAY'

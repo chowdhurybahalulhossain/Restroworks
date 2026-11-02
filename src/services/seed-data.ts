@@ -1039,3 +1039,324 @@ export const SEED_AUDIT_LOGS: AuditLogEntry[] = [
     details: 'Opening float verified 10,000 BDT',
   },
 ];
+
+export const SEED_INGREDIENTS: import('../types').Ingredient[] = [
+  {
+    id: 'ing-01',
+    sku: 'ING-BEEF-ANGUS',
+    name: 'Certified Angus Beef Ribeye Primal',
+    unit: 'KG',
+    costPerUnit: 280000, // 2,800 BDT/kg
+    currentStock: 18.5,
+    parLevel: 25.0,
+    reorderPoint: 8.0,
+  },
+  {
+    id: 'ing-02',
+    sku: 'ING-TRUFFLE-OIL',
+    name: 'Italian White Truffle Oil (Urbani)',
+    unit: 'LITER',
+    costPerUnit: 650000, // 6,500 BDT/L
+    currentStock: 3.2,
+    parLevel: 5.0,
+    reorderPoint: 1.5,
+  },
+  {
+    id: 'ing-03',
+    sku: 'ING-POTATO-SKINON',
+    name: 'Russet Burbank Potatoes',
+    unit: 'KG',
+    costPerUnit: 8500, // 85 BDT/kg
+    currentStock: 45.0,
+    parLevel: 60.0,
+    reorderPoint: 20.0,
+  },
+  {
+    id: 'ing-04',
+    sku: 'ING-BURRATA-CHEESE',
+    name: 'Fresh Italian Burrata Cheese (150g balls)',
+    unit: 'PIECE',
+    costPerUnit: 35000, // 350 BDT/ball
+    currentStock: 14,
+    parLevel: 30,
+    reorderPoint: 8,
+  },
+  {
+    id: 'ing-05',
+    sku: 'ING-BASMATI-RICE',
+    name: 'Super Kernel Basmati Rice (Daawat)',
+    unit: 'KG',
+    costPerUnit: 22000, // 220 BDT/kg
+    currentStock: 80.0,
+    parLevel: 100.0,
+    reorderPoint: 30.0,
+  },
+  {
+    id: 'ing-06',
+    sku: 'ING-MUTTON-BABY',
+    name: 'Tender Grass-Fed Baby Mutton',
+    unit: 'KG',
+    costPerUnit: 110000, // 1,100 BDT/kg
+    currentStock: 22.0,
+    parLevel: 35.0,
+    reorderPoint: 10.0,
+  },
+  {
+    id: 'ing-07',
+    sku: 'ING-BRIOCHE-BUNS',
+    name: 'Artisan Toasted Potato Brioche Buns',
+    unit: 'PIECE',
+    costPerUnit: 4500, // 45 BDT/pc
+    currentStock: 38,
+    parLevel: 60,
+    reorderPoint: 15,
+  },
+  {
+    id: 'ing-08',
+    sku: 'ING-HILSA-PADMA',
+    name: 'Fresh Padma River Hilsa (1.2kg grade)',
+    unit: 'KG',
+    costPerUnit: 220000, // 2,200 BDT/kg
+    currentStock: 6.5,
+    parLevel: 15.0,
+    reorderPoint: 5.0, // Low stock alert!
+  },
+  {
+    id: 'ing-09',
+    sku: 'ING-PARMIGIANO',
+    name: '24-Month Aged Parmigiano Reggiano',
+    unit: 'KG',
+    costPerUnit: 340000, // 3,400 BDT/kg
+    currentStock: 4.8,
+    parLevel: 8.0,
+    reorderPoint: 2.0,
+  },
+  {
+    id: 'ing-10',
+    sku: 'ING-SAN-MARZANO',
+    name: 'San Marzano D.O.P. Whole Peeled Tomatoes',
+    unit: 'KG',
+    costPerUnit: 42000, // 420 BDT/kg
+    currentStock: 28.0,
+    parLevel: 40.0,
+    reorderPoint: 12.0,
+  },
+];
+
+export const SEED_RECIPES: import('../types').Recipe[] = [
+  {
+    id: 'rec-ribeye',
+    menuItemId: 'item-08', // Angus Ribeye (300g)
+    menuItemName: 'Prime Angus Ribeye (300g)',
+    yieldServings: 1,
+    lines: [
+      { ingredientId: 'ing-01', ingredientName: 'Certified Angus Beef Ribeye Primal', quantity: 0.35, unit: 'KG', wastagePct: 14.0 },
+      { ingredientId: 'ing-02', ingredientName: 'Italian White Truffle Oil', quantity: 0.015, unit: 'LITER', wastagePct: 2.0 },
+      { ingredientId: 'ing-03', ingredientName: 'Russet Burbank Potatoes', quantity: 0.20, unit: 'KG', wastagePct: 8.0 },
+    ],
+  },
+  {
+    id: 'rec-truffle-fries',
+    menuItemId: 'item-01', // Truffle Fries
+    menuItemName: 'Truffle Truffle Fries',
+    yieldServings: 1,
+    lines: [
+      { ingredientId: 'ing-03', ingredientName: 'Russet Burbank Potatoes', quantity: 0.25, unit: 'KG', wastagePct: 5.0 },
+      { ingredientId: 'ing-02', ingredientName: 'Italian White Truffle Oil', quantity: 0.01, unit: 'LITER', wastagePct: 0.0 },
+      { ingredientId: 'ing-09', ingredientName: '24-Month Aged Parmigiano Reggiano', quantity: 0.03, unit: 'KG', wastagePct: 2.0 },
+    ],
+  },
+  {
+    id: 'rec-kacchi',
+    menuItemId: 'item-25', // Dhaka Grand Kacchi Biryani
+    menuItemName: 'Dhaka Grand Kacchi Biryani with Shahi Borhani',
+    yieldServings: 1,
+    lines: [
+      { ingredientId: 'ing-06', ingredientName: 'Tender Grass-Fed Baby Mutton', quantity: 0.32, unit: 'KG', wastagePct: 10.0 },
+      { ingredientId: 'ing-05', ingredientName: 'Super Kernel Basmati Rice', quantity: 0.22, unit: 'KG', wastagePct: 3.0 },
+    ],
+  },
+  {
+    id: 'rec-smash-burger',
+    menuItemId: 'item-13', // Nova Black Truffle Smash Burger
+    menuItemName: 'The Nova Black Truffle Smash Burger',
+    yieldServings: 1,
+    lines: [
+      { ingredientId: 'ing-01', ingredientName: 'Certified Angus Beef Ribeye Primal (Ground)', quantity: 0.22, unit: 'KG', wastagePct: 5.0 },
+      { ingredientId: 'ing-07', ingredientName: 'Artisan Toasted Potato Brioche Buns', quantity: 1, unit: 'PIECE', wastagePct: 0.0 },
+      { ingredientId: 'ing-02', ingredientName: 'Italian White Truffle Oil', quantity: 0.008, unit: 'LITER', wastagePct: 0.0 },
+    ],
+  },
+];
+
+export const SEED_WASTAGE_LOGS: import('../types').WastageLog[] = [
+  {
+    id: 'wst-01',
+    timestamp: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
+    ingredientId: 'ing-01',
+    ingredientName: 'Certified Angus Beef Ribeye Primal',
+    quantity: 0.8,
+    unit: 'KG',
+    reason: 'BURNT',
+    cost: 224000, // 2,240 BDT
+    reportedByName: 'Chef Mahfuzur Rahman',
+  },
+  {
+    id: 'wst-02',
+    timestamp: new Date(Date.now() - 12 * 3600 * 1000).toISOString(),
+    ingredientId: 'ing-04',
+    ingredientName: 'Fresh Italian Burrata Cheese',
+    quantity: 2,
+    unit: 'PIECE',
+    reason: 'EXPIRED',
+    cost: 70000, // 700 BDT
+    reportedByName: 'Chef Mahfuzur Rahman',
+  },
+];
+
+export const SEED_PURCHASE_ORDERS: import('../types').PurchaseOrder[] = [
+  {
+    id: 'po-1001',
+    poNumber: 'PO-2026-089',
+    supplierName: 'Bengal Meat Processing Industries Ltd.',
+    items: [
+      { ingredientId: 'ing-01', ingredientName: 'Angus Beef Ribeye Primal', quantity: 20, unit: 'KG', unitCost: 260000, totalCost: 5200000 },
+      { ingredientId: 'ing-06', ingredientName: 'Grass-Fed Baby Mutton', quantity: 30, unit: 'KG', unitCost: 105000, totalCost: 3150000 },
+    ],
+    totalCost: 8350000, // 83,500 BDT
+    status: 'RECEIVED',
+    createdAt: new Date(Date.now() - 48 * 3600 * 1000).toISOString(),
+    receivedAt: new Date(Date.now() - 40 * 3600 * 1000).toISOString(),
+  },
+  {
+    id: 'po-1002',
+    poNumber: 'PO-2026-092',
+    supplierName: 'Euro Gourmet Imports (Cheese & Truffles)',
+    items: [
+      { ingredientId: 'ing-04', ingredientName: 'Fresh Italian Burrata Cheese', quantity: 25, unit: 'PIECE', unitCost: 32000, totalCost: 800000 },
+      { ingredientId: 'ing-02', ingredientName: 'Italian White Truffle Oil', quantity: 4, unit: 'LITER', unitCost: 620000, totalCost: 2480000 },
+    ],
+    totalCost: 3280000, // 32,800 BDT
+    status: 'SUBMITTED',
+    createdAt: new Date(Date.now() - 4 * 3600 * 1000).toISOString(),
+  },
+];
+
+export const SEED_STAFF_ATTENDANCE: import('../types').StaffAttendance[] = [
+  {
+    id: 'att-01',
+    userId: 'usr-cashier',
+    userName: 'Nusrat Jahan',
+    role: 'Lead Cashier',
+    clockIn: '10:00 AM',
+    breakMinutes: 30,
+    overtimeMinutes: 0,
+    status: 'ON_DUTY',
+  },
+  {
+    id: 'att-02',
+    userId: 'usr-waiter-1',
+    userName: 'Rakibul Hasan',
+    role: 'Captain',
+    clockIn: '09:45 AM',
+    breakMinutes: 45,
+    overtimeMinutes: 15,
+    status: 'ON_DUTY',
+  },
+  {
+    id: 'att-03',
+    userId: 'usr-chef',
+    userName: 'Chef Mahfuzur Rahman',
+    role: 'Head Chef',
+    clockIn: '08:30 AM',
+    breakMinutes: 60,
+    overtimeMinutes: 45,
+    status: 'ON_DUTY',
+  },
+  {
+    id: 'att-04',
+    userId: 'usr-bartender',
+    userName: 'Tanvir Hossain',
+    role: 'Mixologist',
+    clockIn: '12:00 PM',
+    breakMinutes: 0,
+    overtimeMinutes: 0,
+    status: 'ON_DUTY',
+  },
+  {
+    id: 'att-05',
+    userId: 'usr-inventory',
+    userName: 'Kawsar Mahmud',
+    role: 'Storekeeper',
+    clockIn: '08:00 AM',
+    clockOut: '05:00 PM',
+    breakMinutes: 60,
+    overtimeMinutes: 0,
+    status: 'CLOCKED_OUT',
+  },
+];
+
+export const SEED_EXPENSES: import('../types').ExpenseVoucher[] = [
+  {
+    id: 'exp-01',
+    voucherNumber: 'VOUCH-2026-041',
+    category: 'PANTRY_PURCHASE',
+    amount: 1450000, // 14,500 BDT
+    notes: 'Emergency morning fresh herbs, lemon, and green chilies from Karwan Bazar',
+    approvedByName: 'Tariqul Islam (Branch Manager)',
+    createdAt: new Date(Date.now() - 6 * 3600 * 1000).toISOString(),
+  },
+  {
+    id: 'exp-02',
+    voucherNumber: 'VOUCH-2026-042',
+    category: 'UTILITIES',
+    amount: 3820000, // 38,200 BDT
+    notes: 'Gulshan branch monthly backup generator diesel refill',
+    approvedByName: 'Chowdhury Super Admin',
+    createdAt: new Date(Date.now() - 28 * 3600 * 1000).toISOString(),
+  },
+];
+
+export const SEED_JOURNAL_ENTRIES: import('../types').JournalEntry[] = [
+  {
+    id: 'je-01',
+    date: new Date().toISOString().split('T')[0],
+    accountCode: '1010-CASH',
+    accountName: 'Cash on Hand & Drawer',
+    debit: 4580000,
+    credit: 0,
+    refId: 'shift-today-01',
+    description: 'Cash sales revenue collection for shift #01',
+  },
+  {
+    id: 'je-02',
+    date: new Date().toISOString().split('T')[0],
+    accountCode: '4010-SALES-DINEIN',
+    accountName: 'Food & Beverage Dine-In Revenue',
+    debit: 0,
+    credit: 4580000,
+    refId: 'shift-today-01',
+    description: 'Food & Beverage sales recognition',
+  },
+  {
+    id: 'je-03',
+    date: new Date().toISOString().split('T')[0],
+    accountCode: '5010-COGS-FOOD',
+    accountName: 'Cost of Goods Sold (Inventory Depletion)',
+    debit: 1650000,
+    credit: 0,
+    refId: 'cogs-daily-01',
+    description: 'Recipe BOM automated pantry depletion deduction',
+  },
+  {
+    id: 'je-04',
+    date: new Date().toISOString().split('T')[0],
+    accountCode: '1210-INV-PANTRY',
+    accountName: 'Raw Ingredients Inventory Asset',
+    debit: 0,
+    credit: 1650000,
+    refId: 'cogs-daily-01',
+    description: 'Inventory asset credit for food served',
+  },
+];
+
