@@ -36,16 +36,16 @@
 
 ---
 
-## Phase 1: Core POS MVP
-- [ ] **TASK-1.1:** Menu catalog browsing, search, barcode scan, category rail, fast item selector.
-- [ ] **TASK-1.2:** Floor & Table management with live table status indicators.
-- [ ] **TASK-1.3:** Order taking engine: modifiers, combos, course assignment, allergy flags.
-- [ ] **TASK-1.4:** Kitchen Order Ticket (KOT) generation, station routing (Kitchen, Bar, Grill), and real-time KDS bump screen.
-- [ ] **TASK-1.5:** Audited Billing Engine: VAT/GST, Service Charge, item/bill discounts, comp items, bill splitting (by item, seat, equal share).
-- [ ] **TASK-1.6:** Payment settlement: Cash with denomination hints, Card, and SSLCOMMERZ integration (hosted checkout, IPN, Order Validation API `val_id` check).
-- [ ] **TASK-1.7:** Shift management: Opening float, X-Report, Z-Report, variance calculation.
-- [ ] **TASK-1.8:** Thermal printer simulation (ESC/POS raw bytes, receipt preview, kitchen slips).
-- [ ] **TASK-1.9:** Offline mode: IndexedDB storage, outbox queue, background sync with deterministic sequence reconciliation.
+## Phase 1: Core POS MVP (Completed)
+- [x] **TASK-1.1:** Menu catalog browsing, search, barcode scan, category rail, fast item selector.
+- [x] **TASK-1.2:** Floor & Table management with visual interactive floor plan and live status indicators.
+- [x] **TASK-1.3:** Order taking engine: modifiers modal with validation, combos, course assignment, allergy flags.
+- [x] **TASK-1.4:** Kitchen Order Ticket (KOT) generation, station routing (Kitchen, Bar, Grill), and real-time KDS bump screen.
+- [x] **TASK-1.5:** Audited Billing Engine: VAT 15%, Service Charge 10%, item/bill discounts, promo codes (VIP20, WELCOME10), bill splitting (N-ways and itemized).
+- [x] **TASK-1.6:** Payment settlement: Cash with denomination hints & change calculation, Card, and SSLCOMMERZ integration simulator (hosted checkout, IPN, Order Validation API `val_id` check).
+- [x] **TASK-1.7:** Shift management: Opening float, physical cash denomination counter, variance calculation, and printable Z-Report.
+- [x] **TASK-1.8:** Thermal printer simulation: ESC/POS raw byte generator (`\x1B@`, `\x1Ba`, paper cut, drawer kick pulse `\x1Bp\x00\x19\xFA`), and 80mm printable tax invoice preview.
+- [x] **TASK-1.9:** Offline mode: IndexedDB storage via Dexie.js, outbox queue, background sync with deterministic sequence reconciliation.
 
 ---
 
