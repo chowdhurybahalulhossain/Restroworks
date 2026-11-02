@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --nova-bg: #07090E;
+  --nova-surface: #0E131F;
+  --nova-surface-elevated: #161D2E;
+  --nova-border: rgba(255, 255, 255, 0.08);
+  --nova-cyan: #00F0FF;
+  --nova-emerald: #10B981;
+  --nova-amber: #F59E0B;
+  --nova-crimson: #FF3366;
+}
+
+body {
+  margin: 0;
+  background-color: var(--nova-bg);
+  color: #F8FAFC;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+
+/* Custom Scrollbar for tactile touch feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(14, 19, 31, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 240, 255, 0.4);
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: rgba(14, 19, 31, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-elevated {
+  background: rgba(22, 29, 46, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.glass-input {
+  background: rgba(7, 9, 14, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #F8FAFC;
+}
+.glass-input:focus {
+  border-color: #00F0FF;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+  outline: none;
+}
+
+/* Subtle glow animations */
+@keyframes neonPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+  }
+}
+
+.animate-neon-pulse {
+  animation: neonPulse 2.5s infinite ease-in-out;
+}
+
+@keyframes ticketUrgent {
+  0%, 100% {
+    border-color: rgba(255, 51, 102, 0.4);
+    box-shadow: 0 0 10px rgba(255, 51, 102, 0.2);
+  }
+  50% {
+    border-color: rgba(255, 51, 102, 1);
+    box-shadow: 0 0 22px rgba(255, 51, 102, 0.6);
+  }
+}
+
+.animate-ticket-urgent {
+  animation: ticketUrgent 1.2s infinite ease-in-out;
+}
