@@ -1,11 +1,15 @@
 import { create } from 'zustand';
 import { 
   User, Tenant, Branch, Table, MenuItem, MenuCategory, CartItem, 
-  KitchenTicket, Bill, Shift, AuditLogEntry, PortalApp, KitchenStation, ItemCourse
+  KitchenTicket, Bill, Shift, AuditLogEntry, PortalApp, KitchenStation, ItemCourse,
+  Ingredient, Recipe, WastageLog, PurchaseOrder, StaffAttendance, ExpenseVoucher,
+  ExpenseCategory, JournalEntry
 } from '../types';
 import { 
   SEED_TENANT, SEED_BRANCHES, SEED_USERS, SEED_TABLES, 
-  SEED_CATEGORIES, SEED_MENU_ITEMS, SEED_INITIAL_SHIFT, SEED_AUDIT_LOGS 
+  SEED_CATEGORIES, SEED_MENU_ITEMS, SEED_INITIAL_SHIFT, SEED_AUDIT_LOGS,
+  SEED_INGREDIENTS, SEED_RECIPES, SEED_WASTAGE_LOGS, SEED_PURCHASE_ORDERS,
+  SEED_STAFF_ATTENDANCE, SEED_EXPENSES, SEED_JOURNAL_ENTRIES
 } from '../services/seed-data';
 
 interface ManagerOverrideRequest {
@@ -92,6 +96,21 @@ interface PosState {
   currentShift: Shift;
   auditLogs: AuditLogEntry[];
   addAuditLog: (action: string, entityType: string, entityId: string, details: string) => void;
+
+  // Phase 2: Operations, Inventory, Staff & Expenses
+  ingredients: Ingredient[];
+  recipes: Recipe[];
+  wastageLogs: WastageLog[];
+  purchaseOrders: PurchaseOrder[];
+  staffAttendance: StaffAttendance[];
+  expenses: ExpenseVoucher[];
+  journalEntries: JournalEntry[];
+
+  deductInventoryForCartItems: (items: CartItem[]) => void;
+  logWastage: (ingredientId: string, quantity: number, reason: 'BURNT' | 'EXPIRED' | 'SPILLED' | 'QUALITY_DEFECT') => void;
+  receivePurchaseOrder: (poId: string) => void;
+  punchStaffTimeClock: (userId: string, action: 'IN' | 'OUT' | 'BREAK') => void;
+  recordExpense: (category: ExpenseCategory, amount: number, notes: string) => void;
 }
 
 export const usePosStore = create<PosState>((set, get) => ({
@@ -489,6 +508,9 @@ export const usePosStore = create<PosState>((set, get) => ({
       get().updateTableStatus(selectedTableId, 'ORDERED');
     }
 
+    // Deduct inventory ingredients based on recipes
+    get().deductInventoryForCartItems(cart);
+
     get().addAuditLog('KOT_FIRED', 'KITCHEN_TICKET', ticketId, `Fired ${ticketNum} with ${cart.length} items to Kitchen`);
   },
 
@@ -592,4 +614,204 @@ export const usePosStore = create<PosState>((set, get) => ({
       auditLogs: [newEntry, ...state.auditLogs],
     }));
   },
+
+  // Phase 2 Initial States
+  ingredients: SEED_INGREDIENTS,
+  recipes: SEED_RECIPES,
+  wastageLogs: SEED_WASTAGE_LOGS,
+  purchaseOrders: SEED_PURCHASE_ORDERS,
+  staffAttendance: SEED_STAFF_ATTENDANCE,
+  expenses: SEED_EXPENSES,
+  journalEntries: SEED_JOURNAL_ENTRIES,
+
+  deductInventoryForCartItems: (items: CartItem[]) => {
+    const { recipes, ingredients } = get();
+    let updatedIngredients = [...ingredients];
+
+    items.forEach((item) => {
+      const recipe = recipes.find((r) => r.menuItemId === item.menuItemId);
+      if (recipe) {
+        recipe.lines.forEach((line) => {
+          const qtyToDeduct = line.quantity * item.quantity;
+          updatedIngredients = updatedIngredients.map((ing) => {
+            if (ing.id === line.ingredientId) {
+              const newStock = Math.max(0, +(ing.currentStock - qtyToDeduct).toFixed(3));
+              if (newStock <= ing.reorderPoint) {
+                get().addAuditLog(
+                  'LOW_STOCK_ALERT',
+                  'INGREDIENT',
+                  ing.id,
+                  `Warning: ${ing.name} stock (${newStock} ${ing.unit}) has breached reorder threshold (${ing.reorderPoint} ${ing.unit})`
+                );
+              }
+              return { ...ing, currentStock: newStock };
+            }
+            return ing;
+          });
+        });
+      }
+    });
+
+    set({ ingredients: updatedIngredients });
+  },
+
+  logWastage: (ingredientId, quantity, reason) => {
+    const ing = get().ingredients.find((i) => i.id === ingredientId);
+    if (!ing) return;
+
+    const cost = Math.round(quantity * ing.costPerUnit);
+    const newLog: WastageLog = {
+      id: `wst-${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      ingredientId,
+      ingredientName: ing.name,
+      quantity,
+      unit: ing.unit,
+      reason,
+      cost,
+      reportedByName: get().currentUser.name,
+    };
+
+    set((state) => ({
+      wastageLogs: [newLog, ...state.wastageLogs],
+      ingredients: state.ingredients.map((i) =>
+        i.id === ingredientId ? { ...i, currentStock: Math.max(0, +(i.currentStock - quantity).toFixed(3)) } : i
+      ),
+      journalEntries: [
+        {
+          id: `je-${Date.now()}`,
+          date: new Date().toISOString().split('T')[0],
+          accountCode: '5020-SPOILAGE',
+          accountName: 'Kitchen Spoilage & Wastage Loss',
+          debit: cost,
+          credit: 0,
+          refId: newLog.id,
+          description: `Logged wastage of ${quantity} ${ing.unit} ${ing.name} (${reason})`,
+        },
+        {
+          id: `je-${Date.now()}-c`,
+          date: new Date().toISOString().split('T')[0],
+          accountCode: '1210-INV-PANTRY',
+          accountName: 'Raw Ingredients Inventory Asset',
+          debit: 0,
+          credit: cost,
+          refId: newLog.id,
+          description: `Inventory reduction for spoiled ${ing.name}`,
+        },
+        ...state.journalEntries,
+      ],
+    }));
+
+    get().addAuditLog('WASTAGE_LOGGED', 'INGREDIENT', ingredientId, `Logged ${quantity} ${ing.unit} ${ing.name} as ${reason} (Cost: ৳${cost / 100})`);
+  },
+
+  receivePurchaseOrder: (poId) => {
+    const po = get().purchaseOrders.find((p) => p.id === poId);
+    if (!po || po.status === 'RECEIVED') return;
+
+    set((state) => {
+      let updatedIngredients = [...state.ingredients];
+      po.items.forEach((item) => {
+        updatedIngredients = updatedIngredients.map((ing) =>
+          ing.id === item.ingredientId
+            ? { ...ing, currentStock: +(ing.currentStock + item.quantity).toFixed(3) }
+            : ing
+        );
+      });
+
+      const updatedPOs = state.purchaseOrders.map((p) =>
+        p.id === poId ? { ...p, status: 'RECEIVED' as const, receivedAt: new Date().toISOString() } : p
+      );
+
+      return {
+        ingredients: updatedIngredients,
+        purchaseOrders: updatedPOs,
+        journalEntries: [
+          {
+            id: `je-${Date.now()}`,
+            date: new Date().toISOString().split('T')[0],
+            accountCode: '1210-INV-PANTRY',
+            accountName: 'Raw Ingredients Inventory Asset',
+            debit: po.totalCost,
+            credit: 0,
+            refId: po.poNumber,
+            description: `Goods Receipt Note (GRN) for ${po.poNumber} from ${po.supplierName}`,
+          },
+          {
+            id: `je-${Date.now()}-c`,
+            date: new Date().toISOString().split('T')[0],
+            accountCode: '2010-ACCOUNTS-PAYABLE',
+            accountName: 'Trade Accounts Payable (Suppliers)',
+            debit: 0,
+            credit: po.totalCost,
+            refId: po.poNumber,
+            description: `Trade liability recognized for ${po.poNumber}`,
+          },
+          ...state.journalEntries,
+        ],
+      };
+    });
+
+    get().addAuditLog('PO_RECEIVED_GRN', 'PURCHASE_ORDER', poId, `Received ${po.poNumber} from ${po.supplierName} (Total: ৳${po.totalCost / 100})`);
+  },
+
+  punchStaffTimeClock: (userId, action) => {
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    set((state) => ({
+      staffAttendance: state.staffAttendance.map((att) => {
+        if (att.userId === userId) {
+          if (action === 'IN') return { ...att, clockIn: timeStr, status: 'ON_DUTY' as const };
+          if (action === 'OUT') return { ...att, clockOut: timeStr, status: 'CLOCKED_OUT' as const };
+          if (action === 'BREAK') return { ...att, status: 'ON_BREAK' as const };
+        }
+        return att;
+      }),
+    }));
+
+    const staff = get().staffAttendance.find((a) => a.userId === userId);
+    get().addAuditLog('TIME_CLOCK_PUNCH', 'STAFF', userId, `${staff?.userName || userId} punched ${action} at ${timeStr}`);
+  },
+
+  recordExpense: (category, amount, notes) => {
+    const voucherNumber = `VOUCH-2026-${Math.floor(100 + Math.random() * 900)}`;
+    const newVoucher: ExpenseVoucher = {
+      id: `exp-${Date.now()}`,
+      voucherNumber,
+      category,
+      amount,
+      notes,
+      approvedByName: get().currentUser.name,
+      createdAt: new Date().toISOString(),
+    };
+
+    set((state) => ({
+      expenses: [newVoucher, ...state.expenses],
+      journalEntries: [
+        {
+          id: `je-${Date.now()}`,
+          date: new Date().toISOString().split('T')[0],
+          accountCode: '6010-OPERATING-EXPENSE',
+          accountName: `Operating Expense (${category})`,
+          debit: amount,
+          credit: 0,
+          refId: voucherNumber,
+          description: notes,
+        },
+        {
+          id: `je-${Date.now()}-c`,
+          date: new Date().toISOString().split('T')[0],
+          accountCode: '1010-CASH',
+          accountName: 'Cash on Hand / Drawer',
+          debit: 0,
+          credit: amount,
+          refId: voucherNumber,
+          description: `Petty cash disbursement for ${voucherNumber}`,
+        },
+        ...state.journalEntries,
+      ],
+    }));
+
+    get().addAuditLog('EXPENSE_VOUCHER_CREATED', 'EXPENSE', newVoucher.id, `Created ${voucherNumber} (${category}) for ৳${amount / 100}: ${notes}`);
+  },
 }));
+
