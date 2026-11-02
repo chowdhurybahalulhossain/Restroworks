@@ -4,6 +4,7 @@ import { Navbar } from './components/layout/Navbar';
 import { PosTerminalPortal } from './components/portals/PosTerminalPortal';
 import { KdsPortal } from './components/portals/KdsPortal';
 import { DashboardPortal } from './components/portals/DashboardPortal';
+import { OperationsHubPortal } from './components/portals/OperationsHubPortal';
 import { CustomerQrPortal } from './components/portals/CustomerQrPortal';
 import { WaiterHandheldPortal } from './components/portals/WaiterHandheldPortal';
 import { CustomerFacingDisplayPortal } from './components/portals/CustomerFacingDisplayPortal';
@@ -23,6 +24,8 @@ export const App: React.FC = () => {
         return <KdsPortal />;
       case 'ADMIN_DASHBOARD':
         return <DashboardPortal />;
+      case 'OPERATIONS_HUB':
+        return <OperationsHubPortal />;
       case 'CUSTOMER_QR':
         return <CustomerQrPortal />;
       case 'WAITER_HANDHELD':

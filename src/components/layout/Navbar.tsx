@@ -19,6 +19,7 @@ export const Navbar: React.FC = () => {
     POS_TERMINAL: 'POS Terminal',
     KITCHEN_DISPLAY: 'Kitchen Display (KDS)',
     ADMIN_DASHBOARD: 'Executive Dashboard',
+    OPERATIONS_HUB: 'Operations & Inventory Hub',
     CUSTOMER_QR: 'Customer QR Ordering',
     WAITER_HANDHELD: 'Waiter Handheld',
     CUSTOMER_DISPLAY: 'Customer-Facing Display',

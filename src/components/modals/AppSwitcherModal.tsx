@@ -39,6 +39,14 @@ export const AppSwitcherModal: React.FC<AppSwitcherModalProps> = ({ onClose }) =
       tag: 'Management',
     },
     {
+      id: 'OPERATIONS_HUB',
+      name: 'Operations & Inventory Hub',
+      desc: 'Stock depletion, recipe BOM, purchase orders, time clock & ledgers',
+      icon: ChefHat,
+      color: 'from-amber-500 to-orange-600',
+      tag: 'Back-of-House',
+    },
+    {
       id: 'CUSTOMER_QR',
       name: 'Customer QR Ordering',
       desc: 'Interactive table menu, 3D dish preview & phone payment',
