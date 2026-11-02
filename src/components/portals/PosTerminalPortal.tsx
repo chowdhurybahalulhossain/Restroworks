@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
 import { 
   Search, Flame, Plus, Minus, Trash2, Send, 
-  CreditCard, Banknote, QrCode, Tag, Sparkles, AlertCircle, CheckCircle2 
+  CreditCard, Banknote, QrCode, Tag, Sparkles, AlertCircle, 
+  CheckCircle2, LayoutGrid, Scissors, Printer, Calculator, 
+  ArrowRightLeft, Percent, Layers 
 } from 'lucide-react';
 import { usePosStore } from '../../store/posStore';
+import { MenuItem, Bill } from '../../types';
+import { FloorPlanView } from '../floor/FloorPlanView';
+import { ModifierSelectorModal } from '../modals/ModifierSelectorModal';
+import { TableTransferModal } from '../modals/TableTransferModal';
+import { SplitBillModal } from '../modals/SplitBillModal';
+import { ReceiptPreviewModal } from '../modals/ReceiptPreviewModal';
+import { SslCommerzModal } from '../modals/SslCommerzModal';
+import { ShiftCloseModal } from '../modals/ShiftCloseModal';
 import confetti from 'canvas-confetti';
 
 export const PosTerminalPortal: React.FC = () => {
@@ -13,10 +23,24 @@ export const PosTerminalPortal: React.FC = () => {
     removeCartItem, subtotal, discountPercentage, setDiscountPercentage,
     discountAmount, serviceChargeAmount, taxAmount, grandTotal,
     tables, selectedTableId, selectTable, fireCurrentOrderToKitchen,
-    settlePayment, locale, toggle86Item, currentUser
+    settlePayment, locale, toggle86Item, currentUser, addAuditLog
   } = usePosStore();
 
-  const [paymentSuccessModal, setPaymentSuccessModal] = useState<any | null>(null);
+  // View state: 'MENU' or 'FLOOR'
+  const [activeTab, setActiveTab] = useState<'MENU' | 'FLOOR'>('MENU');
+
+  // Modals state
+  const [activeModifierItem, setActiveModifierItem] = useState<MenuItem | null>(null);
+  const [transferModalOpen, setTransferModalOpen] = useState(false);
+  const [splitModalOpen, setSplitModalOpen] = useState(false);
+  const [sslModalOpen, setSslModalOpen] = useState(false);
+  const [shiftModalOpen, setShiftModalOpen] = useState(false);
+  const [receiptBill, setReceiptBill] = useState<Bill | null>(null);
+
+  // Promo code & cash tendered calculation
+  const [promoCodeInput, setPromoCodeInput] = useState('');
+  const [promoMsg, setPromoMsg] = useState<{ text: string; success: boolean } | null>(null);
+  const [tenderedCash, setTenderedCash] = useState<number | null>(null);
 
   const selectedTable = tables.find((t) => t.id === selectedTableId);
 
@@ -30,12 +54,48 @@ export const PosTerminalPortal: React.FC = () => {
     return matchesCat && matchesQuery;
   });
 
+  const handleItemClick = (item: MenuItem) => {
+    if (item.is86) return;
+    // If item has modifier groups or variants, open customization modal
+    if ((item.modifierGroups && item.modifierGroups.length > 0) || (item.variants && item.variants.length > 0)) {
+      setActiveModifierItem(item);
+    } else {
+      addToCart(item);
+    }
+  };
+
+  const handleApplyPromo = (e: React.FormEvent) => {
+    e.preventDefault();
+    const code = promoCodeInput.trim().toUpperCase();
+    if (code === 'VIP20') {
+      setDiscountPercentage(20);
+      setPromoMsg({ text: 'Promo VIP20 Applied (20% Off)', success: true });
+    } else if (code === 'WELCOME10') {
+      setDiscountPercentage(10);
+      setPromoMsg({ text: 'Promo WELCOME10 Applied (10% Off)', success: true });
+    } else if (code === 'NOVAPOS') {
+      setDiscountPercentage(15);
+      setPromoMsg({ text: 'Promo NOVAPOS Applied (15% Off)', success: true });
+    } else {
+      setPromoMsg({ text: 'Invalid promo code', success: false });
+    }
+  };
+
+  const handleCashTender = (cashMinor: number) => {
+    setTenderedCash(cashMinor);
+  };
+
   const handlePay = (method: string) => {
     if (cart.length === 0) return;
-    const res = settlePayment(method);
-    setPaymentSuccessModal(res.bill);
+    if (method === 'SSLCOMMERZ') {
+      setSslModalOpen(true);
+      return;
+    }
 
-    // Fire celebratory confetti!
+    const res = settlePayment(method);
+    setReceiptBill(res.bill);
+    setTenderedCash(null);
+
     confetti({
       particleCount: 80,
       spread: 70,
@@ -45,17 +105,54 @@ export const PosTerminalPortal: React.FC = () => {
 
   return (
     <div className="flex-1 flex overflow-hidden">
-      {/* 1. Left: Categories Rail & Floor Quick Table Bar */}
+      {/* 1. Left: Navigation Rail with Floor/Menu Tabs & Categories */}
       <div className="w-64 border-r border-white/10 glass-panel flex flex-col overflow-y-auto">
-        {/* Table Selector Header */}
-        <div className="p-3 border-b border-white/10">
-          <label className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block mb-1">
-            Active Dine-In Table
-          </label>
+        {/* Floor vs Menu View Switcher */}
+        <div className="p-3 border-b border-white/10 flex gap-1.5 bg-black/30">
+          <button
+            onClick={() => setActiveTab('MENU')}
+            className={`flex-1 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+              activeTab === 'MENU'
+                ? 'bg-cyan-500 text-black font-bold shadow-glow-cyan'
+                : 'text-slate-400 hover:text-white bg-white/5'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Menu Catalog</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('FLOOR')}
+            className={`flex-1 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+              activeTab === 'FLOOR'
+                ? 'bg-cyan-500 text-black font-bold shadow-glow-cyan'
+                : 'text-slate-400 hover:text-white bg-white/5'
+            }`}
+          >
+            <LayoutGrid className="w-3.5 h-3.5" />
+            <span>Floor Plan</span>
+          </button>
+        </div>
+
+        {/* Active Dine-In Table Pill & Transfer Trigger */}
+        <div className="p-3 border-b border-white/10 space-y-1.5">
+          <div className="flex items-center justify-between">
+            <label className="text-[10px] uppercase font-mono tracking-wider text-slate-400">
+              Active Table
+            </label>
+            <button
+              onClick={() => setTransferModalOpen(true)}
+              className="text-[10px] text-cyan-400 hover:underline flex items-center gap-1 font-mono"
+            >
+              <ArrowRightLeft className="w-3 h-3" />
+              <span>Transfer</span>
+            </button>
+          </div>
+
           <select
             value={selectedTableId || ''}
             onChange={(e) => selectTable(e.target.value)}
-            aria-label="Active Dine-In Table Selector"
+            aria-label="Active Table Selection"
             className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs font-semibold text-white focus:outline-none focus:border-cyan-400 cursor-pointer"
           >
             {tables.map((t) => (
@@ -66,134 +163,157 @@ export const PosTerminalPortal: React.FC = () => {
           </select>
         </div>
 
-        {/* Categories Rail */}
-        <div className="p-2 space-y-1">
-          <button
-            onClick={() => setSelectedCategoryId('ALL')}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs font-semibold transition-all ${
-              selectedCategoryId === 'ALL'
-                ? 'bg-cyan-500 text-black shadow-glow-cyan font-bold'
-                : 'text-slate-300 hover:bg-white/5'
-            }`}
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>All Menu Items</span>
-          </button>
-
-          {categories.map((cat) => (
+        {/* Categories Rail (When on Menu tab) */}
+        {activeTab === 'MENU' && (
+          <div className="p-2 space-y-1 flex-1">
             <button
-              key={cat.id}
-              onClick={() => setSelectedCategoryId(cat.id)}
+              onClick={() => setSelectedCategoryId('ALL')}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs font-semibold transition-all ${
-                selectedCategoryId === cat.id
+                selectedCategoryId === 'ALL'
                   ? 'bg-cyan-500 text-black shadow-glow-cyan font-bold'
                   : 'text-slate-300 hover:bg-white/5'
               }`}
             >
-              <Flame className="w-4 h-4 opacity-75" />
-              <div className="flex-1 truncate">
-                <div>{locale === 'en' ? cat.nameEn : cat.nameBn}</div>
-              </div>
+              <Sparkles className="w-4 h-4" />
+              <span>All Menu Items</span>
             </button>
-          ))}
+
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategoryId(cat.id)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-xs font-semibold transition-all ${
+                  selectedCategoryId === cat.id
+                    ? 'bg-cyan-500 text-black shadow-glow-cyan font-bold'
+                    : 'text-slate-300 hover:bg-white/5'
+                }`}
+              >
+                <Flame className="w-4 h-4 opacity-75" />
+                <div className="flex-1 truncate">
+                  <div>{locale === 'en' ? cat.nameEn : cat.nameBn}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Shift Close Action at Rail Bottom */}
+        <div className="p-3 border-t border-white/10 mt-auto bg-black/20">
+          <button
+            onClick={() => setShiftModalOpen(true)}
+            className="w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-300 flex items-center justify-center gap-2 transition-all hover:border-cyan-500/40"
+          >
+            <Calculator className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Shift Z-Report Close</span>
+          </button>
         </div>
       </div>
 
-      {/* 2. Center: Search & Fast Item Catalog Grid */}
-      <div className="flex-1 flex flex-col overflow-hidden bg-nova-bg/60">
-        {/* Search Bar */}
-        <div className="p-4 border-b border-white/10 flex items-center gap-3 glass-panel">
-          <div className="relative flex-1">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search dishes by name, SKU, or Bengali..."
-              className="w-full h-10 rounded-xl glass-input pl-9 pr-4 text-xs font-medium placeholder-slate-500"
-            />
+      {/* 2. Center: Either Menu Catalog or Visual Floor Plan */}
+      {activeTab === 'FLOOR' ? (
+        <FloorPlanView
+          onOpenOrder={(tableId) => {
+            selectTable(tableId);
+            setActiveTab('MENU');
+          }}
+          onOpenTransfer={() => setTransferModalOpen(true)}
+        />
+      ) : (
+        <div className="flex-1 flex flex-col overflow-hidden bg-nova-bg/60">
+          {/* Search Bar */}
+          <div className="p-4 border-b border-white/10 flex items-center gap-3 glass-panel">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search dishes by name, SKU, or Bengali..."
+                className="w-full h-10 rounded-xl glass-input pl-9 pr-4 text-xs font-medium placeholder-slate-500"
+              />
+            </div>
+            <span className="text-xs text-slate-400 font-mono hidden sm:inline">
+              {filteredItems.length} items
+            </span>
           </div>
-          <span className="text-xs text-slate-400 font-mono hidden sm:inline">
-            {filteredItems.length} items
-          </span>
-        </div>
 
-        {/* Items Grid */}
-        <div className="flex-1 p-4 overflow-y-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredItems.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => !item.is86 && addToCart(item)}
-              className={`group glass-panel rounded-2xl overflow-hidden border transition-all duration-200 flex flex-col relative ${
-                item.is86
-                  ? 'opacity-50 cursor-not-allowed border-red-500/30'
-                  : 'hover:border-cyan-500/60 hover:shadow-glow-cyan cursor-pointer active:scale-95'
-              }`}
-            >
-              {/* Image with gradient scrim */}
-              <div className="h-28 w-full relative overflow-hidden bg-slate-900">
-                <img
-                  src={item.image}
-                  alt={item.nameEn}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-nova-surface via-transparent to-transparent" />
+          {/* Items Grid */}
+          <div className="flex-1 p-4 overflow-y-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {filteredItems.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => handleItemClick(item)}
+                className={`group glass-panel rounded-2xl overflow-hidden border transition-all duration-200 flex flex-col relative ${
+                  item.is86
+                    ? 'opacity-50 cursor-not-allowed border-red-500/30'
+                    : 'hover:border-cyan-500/60 hover:shadow-glow-cyan cursor-pointer active:scale-95'
+                }`}
+              >
+                {/* Image with gradient scrim */}
+                <div className="h-28 w-full relative overflow-hidden bg-slate-900">
+                  <img
+                    src={item.image}
+                    alt={item.nameEn}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-nova-surface via-transparent to-transparent" />
 
-                {/* Badges */}
-                <div className="absolute top-2 left-2 flex gap-1">
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/60 backdrop-blur-md text-cyan-300 font-mono font-bold">
-                    {item.station}
-                  </span>
-                  {item.spiceLevel > 0 && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/80 text-white font-bold">
-                      {'🌶️'.repeat(item.spiceLevel)}
+                  {/* Badges */}
+                  <div className="absolute top-2 left-2 flex gap-1">
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/60 backdrop-blur-md text-cyan-300 font-mono font-bold">
+                      {item.station}
                     </span>
+                    {item.modifierGroups && item.modifierGroups.length > 0 && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/80 text-white font-bold">
+                        MODS
+                      </span>
+                    )}
+                  </div>
+
+                  {item.is86 && (
+                    <div className="absolute inset-0 bg-red-950/80 backdrop-blur-sm flex items-center justify-center">
+                      <span className="text-xs font-bold text-red-200 uppercase tracking-widest px-2 py-1 border border-red-500 rounded">
+                        SOLD OUT (86)
+                      </span>
+                    </div>
                   )}
                 </div>
 
-                {item.is86 && (
-                  <div className="absolute inset-0 bg-red-950/80 backdrop-blur-sm flex items-center justify-center">
-                    <span className="text-xs font-bold text-red-200 uppercase tracking-widest px-2 py-1 border border-red-500 rounded">
-                      SOLD OUT (86)
-                    </span>
+                {/* Content */}
+                <div className="p-3 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h4 className="text-xs font-bold text-white group-hover:text-cyan-300 line-clamp-1 transition-colors">
+                      {locale === 'en' ? item.nameEn : item.nameBn}
+                    </h4>
+                    <p className="text-[10px] text-slate-400 line-clamp-1 mt-0.5">
+                      {locale === 'en' ? item.descriptionEn : item.descriptionBn}
+                    </p>
                   </div>
-                )}
-              </div>
 
-              {/* Content */}
-              <div className="p-3 flex-1 flex flex-col justify-between">
-                <div>
-                  <h4 className="text-xs font-bold text-white group-hover:text-cyan-300 line-clamp-1 transition-colors">
-                    {locale === 'en' ? item.nameEn : item.nameBn}
-                  </h4>
-                  <p className="text-[10px] text-slate-400 line-clamp-1 mt-0.5">
-                    {locale === 'en' ? item.descriptionEn : item.descriptionBn}
-                  </p>
-                </div>
-
-                <div className="mt-2 flex items-center justify-between pt-2 border-t border-white/5">
-                  <span className="text-xs font-display font-bold text-cyan-400">
-                    ৳{(item.basePrice / 100).toLocaleString()}
-                  </span>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggle86Item(item.id);
-                    }}
-                    title="Toggle 86 Sold Out status"
-                    className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white font-mono"
-                  >
-                    {item.is86 ? 'Unhide' : '86'}
-                  </button>
+                  <div className="mt-2 flex items-center justify-between pt-2 border-t border-white/5">
+                    <span className="text-xs font-display font-bold text-cyan-400">
+                      ৳{(item.basePrice / 100).toLocaleString()}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggle86Item(item.id);
+                      }}
+                      title="Toggle 86 Sold Out status"
+                      className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white font-mono"
+                    >
+                      {item.is86 ? 'Unhide' : '86'}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* 3. Right: Live Cart, Discount Rules, Tax Breakdown, & Settle */}
+      {/* 3. Right: Live Cart, Split Bill, Discounts, Taxes, & Tender */}
       <div className="w-96 border-l border-white/10 glass-panel flex flex-col">
         {/* Cart Header */}
         <div className="p-4 border-b border-white/10 flex items-center justify-between">
@@ -206,14 +326,26 @@ export const PosTerminalPortal: React.FC = () => {
             </div>
             <p className="text-[11px] text-slate-400">{cart.length} line items added</p>
           </div>
-          <button
-            onClick={fireCurrentOrderToKitchen}
-            disabled={cart.length === 0}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all disabled:opacity-40 disabled:pointer-events-none shadow-lg shadow-amber-500/20"
-          >
-            <Send className="w-3.5 h-3.5" />
-            <span>Send KOT</span>
-          </button>
+
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setSplitModalOpen(true)}
+              disabled={cart.length === 0}
+              title="Split Bill N-Ways or by Item"
+              className="p-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30 disabled:opacity-30 disabled:pointer-events-none transition-all"
+            >
+              <Scissors className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              onClick={fireCurrentOrderToKitchen}
+              disabled={cart.length === 0}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-all disabled:opacity-40 disabled:pointer-events-none shadow-lg shadow-amber-500/20"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>Send KOT</span>
+            </button>
+          </div>
         </div>
 
         {/* Cart Items List */}
@@ -242,7 +374,12 @@ export const PosTerminalPortal: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    <span className="text-xs font-display font-semibold text-cyan-400">
+                    {c.selectedModifiers.map((m, idx) => (
+                      <span key={idx} className="text-[10px] text-amber-300 block">
+                        + {m.nameEn}
+                      </span>
+                    ))}
+                    <span className="text-xs font-display font-semibold text-cyan-400 mt-0.5 block">
                       ৳{(c.unitPrice / 100).toLocaleString()}
                     </span>
                   </div>
@@ -271,10 +408,33 @@ export const PosTerminalPortal: React.FC = () => {
           )}
         </div>
 
-        {/* Pricing Summary & Discount Shortcuts */}
+        {/* Pricing Summary & Tender Section */}
         <div className="p-4 border-t border-white/10 glass-panel space-y-2">
+          {/* Coupon Code Input */}
+          <form onSubmit={handleApplyPromo} className="flex gap-1.5">
+            <input
+              type="text"
+              value={promoCodeInput}
+              onChange={(e) => setPromoCodeInput(e.target.value)}
+              placeholder="Promo Code (VIP20, WELCOME10)"
+              className="flex-1 h-8 rounded-lg glass-input px-2.5 text-[11px] font-mono uppercase"
+            />
+            <button
+              type="submit"
+              className="px-3 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-[10px] font-bold text-white font-mono"
+            >
+              Apply
+            </button>
+          </form>
+
+          {promoMsg && (
+            <p className={`text-[10px] font-mono ${promoMsg.success ? 'text-emerald-400' : 'text-red-400'}`}>
+              {promoMsg.text}
+            </p>
+          )}
+
           {/* Quick Discount Buttons */}
-          <div className="flex items-center gap-1 mb-2">
+          <div className="flex items-center gap-1">
             <span className="text-[10px] text-slate-400 font-mono">DISCOUNT:</span>
             {[0, 5, 10, 15, 20].map((pct) => (
               <button
@@ -291,7 +451,7 @@ export const PosTerminalPortal: React.FC = () => {
             ))}
           </div>
 
-          <div className="flex justify-between text-xs text-slate-400">
+          <div className="flex justify-between text-xs text-slate-400 pt-1">
             <span>Subtotal:</span>
             <span className="font-mono text-slate-200">৳{(subtotal / 100).toLocaleString()}</span>
           </div>
@@ -319,6 +479,30 @@ export const PosTerminalPortal: React.FC = () => {
               ৳{(grandTotal / 100).toLocaleString()}
             </span>
           </div>
+
+          {/* Quick Denominations for Cash Tender */}
+          {cart.length > 0 && (
+            <div className="pt-1">
+              <span className="text-[10px] text-slate-400 font-mono block mb-1">CASH TENDER SHORTCUT:</span>
+              <div className="flex gap-1">
+                {[500, 1000, 2000, 5000].map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => handleCashTender(d * 100)}
+                    className="flex-1 py-1 rounded bg-white/5 hover:bg-white/15 text-[10px] font-mono font-bold text-slate-300"
+                  >
+                    ৳{d}
+                  </button>
+                ))}
+              </div>
+              {tenderedCash && (
+                <div className="mt-1 flex justify-between text-[11px] font-mono text-emerald-300 bg-emerald-500/10 p-1.5 rounded">
+                  <span>Tendered: ৳{(tenderedCash / 100).toLocaleString()}</span>
+                  <span>Change: ৳{Math.max(0, (tenderedCash - grandTotal) / 100).toFixed(2)}</span>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Payment Tender Actions */}
           <div className="grid grid-cols-3 gap-2 pt-2">
@@ -350,44 +534,45 @@ export const PosTerminalPortal: React.FC = () => {
         </div>
       </div>
 
-      {/* Payment Success Invoice Modal */}
-      {paymentSuccessModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-          <div className="w-full max-w-sm glass-panel-elevated rounded-3xl p-6 border border-emerald-500/40 shadow-2xl flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mb-4 shadow-glow-emerald">
-              <CheckCircle2 className="w-10 h-10" />
-            </div>
+      {/* Modals */}
+      {activeModifierItem && (
+        <ModifierSelectorModal
+          item={activeModifierItem}
+          onClose={() => setActiveModifierItem(null)}
+        />
+      )}
 
-            <h3 className="text-xl font-display font-bold text-white">Payment Settled</h3>
-            <p className="text-xs text-slate-400 mt-1 font-mono">{paymentSuccessModal.fiscalInvoiceNumber}</p>
+      {transferModalOpen && (
+        <TableTransferModal onClose={() => setTransferModalOpen(false)} />
+      )}
 
-            <div className="w-full my-4 p-4 rounded-xl bg-white/5 border border-white/10 text-left space-y-1.5 text-xs">
-              <div className="flex justify-between text-slate-300">
-                <span>Method:</span>
-                <span className="font-bold text-white">{paymentSuccessModal.paymentMethod}</span>
-              </div>
-              <div className="flex justify-between text-slate-300">
-                <span>Subtotal:</span>
-                <span className="font-mono">৳{(paymentSuccessModal.subtotal / 100).toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-slate-300">
-                <span>Tax & Service:</span>
-                <span className="font-mono">৳{((paymentSuccessModal.totalTax + paymentSuccessModal.serviceChargeAmount) / 100).toLocaleString()}</span>
-              </div>
-              <div className="pt-2 border-t border-white/10 flex justify-between font-bold text-emerald-400 text-sm">
-                <span>Paid Total:</span>
-                <span className="font-display">৳{(paymentSuccessModal.grandTotal / 100).toLocaleString()}</span>
-              </div>
-            </div>
+      {splitModalOpen && (
+        <SplitBillModal
+          onClose={() => setSplitModalOpen(false)}
+          onConfirmSplit={(splits) => {
+            alert(`Generated ${splits.length} split invoices!`);
+          }}
+        />
+      )}
 
-            <button
-              onClick={() => setPaymentSuccessModal(null)}
-              className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold transition-all shadow-lg shadow-emerald-500/20"
-            >
-              Done & New Order
-            </button>
-          </div>
-        </div>
+      {sslModalOpen && (
+        <SslCommerzModal
+          onClose={() => setSslModalOpen(false)}
+          onSuccess={() => {
+            // Receipt modal triggers
+          }}
+        />
+      )}
+
+      {shiftModalOpen && (
+        <ShiftCloseModal onClose={() => setShiftModalOpen(false)} />
+      )}
+
+      {receiptBill && (
+        <ReceiptPreviewModal
+          bill={receiptBill}
+          onClose={() => setReceiptBill(null)}
+        />
       )}
     </div>
   );
