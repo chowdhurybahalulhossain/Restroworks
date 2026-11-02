@@ -49,12 +49,12 @@
 
 ---
 
-## Phase 2: Operations, Inventory & Staff
-- [ ] **TASK-2.1:** Recipe / BOM management with automatic FIFO ingredient stock deduction on sale.
-- [ ] **TASK-2.2:** Spoilage, wastage logs, low-stock threshold notifications, Purchase Orders (PO) & GRN.
-- [ ] **TASK-2.3:** Staff scheduling, Quick PIN time-clock (attendance, breaks, overtime).
-- [ ] **TASK-2.4:** Petty cash, expense tracking, and double-entry general ledger journal entries.
-- [ ] **TASK-2.5:** Manager approval workflow for voids, refunds, and high discounts with PIN override.
+## Phase 2: Operations, Inventory & Staff (Completed)
+- [x] **TASK-2.1:** Recipe / BOM management with automatic FIFO ingredient stock deduction on sale.
+- [x] **TASK-2.2:** Spoilage, wastage logs, low-stock threshold notifications, Purchase Orders (PO) & GRN.
+- [x] **TASK-2.3:** Staff scheduling, Quick PIN time-clock (attendance, breaks, overtime).
+- [x] **TASK-2.4:** Petty cash, expense tracking, and double-entry general ledger journal entries.
+- [x] **TASK-2.5:** Manager approval workflow for voids, refunds, and high discounts with PIN override.
 
 ---
 
