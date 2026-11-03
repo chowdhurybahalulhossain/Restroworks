@@ -1,7 +1,8 @@
 import React from 'react';
 import { 
   X, Monitor, ChefHat, BarChart3, QrCode, 
-  Smartphone, Tv, Bike, Palette, Check 
+  Smartphone, Tv, Bike, Palette, Check,
+  Users, Calendar, Truck
 } from 'lucide-react';
 import { usePosStore } from '../../store/posStore';
 import { PortalApp } from '../../types';
@@ -85,6 +86,30 @@ export const AppSwitcherModal: React.FC<AppSwitcherModalProps> = ({ onClose }) =
       icon: Palette,
       color: 'from-fuchsia-500 to-purple-600',
       tag: 'UI/UX Specs',
+    },
+    {
+      id: 'CRM_HUB',
+      name: 'Customer CRM',
+      desc: 'Customer profiles, loyalty tiers, visit history, points & birthday alerts',
+      icon: Users,
+      color: 'from-cyan-500 to-teal-600',
+      tag: 'Phase 3 · CRM',
+    },
+    {
+      id: 'RESERVATION_HUB',
+      name: 'Reservations & Waitlist',
+      desc: 'Live reservation calendar, confirm/seat/cancel, real-time walk-in queue',
+      icon: Calendar,
+      color: 'from-purple-500 to-violet-600',
+      tag: 'Phase 3 · Bookings',
+    },
+    {
+      id: 'DELIVERY_HUB',
+      name: 'Delivery & Dispatch',
+      desc: 'Online orders, rider assignment, zone management, live delivery tracking',
+      icon: Truck,
+      color: 'from-orange-500 to-red-600',
+      tag: 'Phase 3 · Delivery',
     },
   ];
 

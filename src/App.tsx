@@ -10,6 +10,9 @@ import { WaiterHandheldPortal } from './components/portals/WaiterHandheldPortal'
 import { CustomerFacingDisplayPortal } from './components/portals/CustomerFacingDisplayPortal';
 import { RiderPortal } from './components/portals/RiderPortal';
 import { DesignSystemPortal } from './components/portals/DesignSystemPortal';
+import { CrmPortal } from './components/portals/CrmPortal';
+import { ReservationPortal } from './components/portals/ReservationPortal';
+import { DeliveryPortal } from './components/portals/DeliveryPortal';
 import { LockScreenModal } from './components/modals/LockScreenModal';
 import { ManagerOverrideModal } from './components/modals/ManagerOverrideModal';
 
@@ -36,6 +39,12 @@ export const App: React.FC = () => {
         return <RiderPortal />;
       case 'DESIGN_SYSTEM':
         return <DesignSystemPortal />;
+      case 'CRM_HUB':
+        return <CrmPortal />;
+      case 'RESERVATION_HUB':
+        return <ReservationPortal />;
+      case 'DELIVERY_HUB':
+        return <DeliveryPortal />;
       default:
         return <PosTerminalPortal />;
     }

@@ -388,4 +388,8 @@ export type PortalApp =
   | 'WAITER_HANDHELD'
   | 'CUSTOMER_DISPLAY'
   | 'RIDER_VIEW'
-  | 'DESIGN_SYSTEM';
+  | 'DESIGN_SYSTEM'
+  // Phase 3 portals
+  | 'CRM_HUB'
+  | 'RESERVATION_HUB'
+  | 'DELIVERY_HUB';
