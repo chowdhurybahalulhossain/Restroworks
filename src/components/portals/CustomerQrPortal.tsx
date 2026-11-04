@@ -4,6 +4,7 @@ import {
   CreditCard, CheckCircle2, ChevronRight, Eye 
 } from 'lucide-react';
 import { usePosStore } from '../../store/posStore';
+import { DishShowcaseModal } from '../modals/DishShowcaseModal';
 
 export const CustomerQrPortal: React.FC = () => {
   const { menuItems, cart, addToCart, locale, grandTotal } = usePosStore();
@@ -128,48 +129,12 @@ export const CustomerQrPortal: React.FC = () => {
           </div>
         )}
 
-        {/* 3D Dish Preview Modal */}
+        {/* Real Interactive 3D Dish Showcase Modal */}
         {selectedPreviewItem && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-            <div className="w-full max-w-sm glass-panel-elevated rounded-3xl p-6 border border-purple-500/50 flex flex-col items-center text-center">
-              <div className="w-48 h-48 rounded-full overflow-hidden border-2 border-cyan-400 p-2 relative shadow-glow-cyan mb-4 animate-spin-slow">
-                <img
-                  src={selectedPreviewItem.image}
-                  alt={selectedPreviewItem.nameEn}
-                  className="w-full h-full rounded-full object-cover"
-                />
-              </div>
-
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-mono font-bold mb-1">
-                3D ROTATABLE DISH PREVIEW
-              </span>
-              <h3 className="text-base font-bold text-white">{selectedPreviewItem.nameEn}</h3>
-              <p className="text-xs text-slate-300 mt-1">{selectedPreviewItem.descriptionEn}</p>
-
-              <div className="flex gap-4 my-4 text-xs font-mono text-slate-300">
-                <span>🔥 {selectedPreviewItem.calories} kcal</span>
-                <span>⏱️ {selectedPreviewItem.prepTimeMinutes} mins</span>
-              </div>
-
-              <div className="w-full flex gap-2">
-                <button
-                  onClick={() => setSelectedPreviewItem(null)}
-                  className="flex-1 py-2.5 rounded-xl bg-white/10 text-white text-xs font-semibold"
-                >
-                  Close
-                </button>
-                <button
-                  onClick={() => {
-                    addToCart(selectedPreviewItem);
-                    setSelectedPreviewItem(null);
-                  }}
-                  className="flex-1 py-2.5 rounded-xl bg-purple-600 text-white text-xs font-bold shadow-lg shadow-purple-600/30"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
+          <DishShowcaseModal
+            item={selectedPreviewItem}
+            onClose={() => setSelectedPreviewItem(null)}
+          />
         )}
       </div>
     </div>
