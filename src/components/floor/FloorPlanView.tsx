@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { 
   Users, Clock, ArrowRightLeft, Plus, CheckCircle2, 
-  Utensils, CloudSun, Crown, Filter 
+  Utensils, CloudSun, Crown, Filter, Box, LayoutGrid 
 } from 'lucide-react';
 import { usePosStore } from '../../store/posStore';
 import { Table, TableStatus } from '../../types';
+import { FloorPlan3D } from '../3d/FloorPlan3D';
+import { sound } from '../../services/soundFx';
 
 interface FloorPlanViewProps {
   onOpenOrder: (tableId: string) => void;
@@ -12,9 +14,10 @@ interface FloorPlanViewProps {
 }
 
 export const FloorPlanView: React.FC<FloorPlanViewProps> = ({ onOpenOrder, onOpenTransfer }) => {
-  const { tables, selectedTableId, selectTable, updateTableStatus } = usePosStore();
+  const { tables, selectedTableId, selectTable, updateTableStatus, reducedMotion } = usePosStore();
   const [selectedZone, setSelectedZone] = useState<string>('zone-main');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const [viewMode, setViewMode] = useState<'2D' | '3D'>('2D');
 
   const zoneTables = tables.filter((t) => {
     const matchesZone = t.zoneId === selectedZone;
@@ -106,6 +109,38 @@ export const FloorPlanView: React.FC<FloorPlanViewProps> = ({ onOpenOrder, onOpe
 
         {/* Action Controls */}
         <div className="flex items-center gap-2">
+          {/* 2D / 3D Spatial Toggle */}
+          <div className="flex items-center bg-white/5 p-1 rounded-xl border border-white/10">
+            <button
+              onClick={() => {
+                sound.playClick(700);
+                setViewMode('2D');
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                viewMode === '2D'
+                  ? 'bg-white/15 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>2D Grid</span>
+            </button>
+            <button
+              onClick={() => {
+                sound.playClick(950);
+                setViewMode('3D');
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                viewMode === '3D'
+                  ? 'bg-cyan-500 text-black font-bold shadow-glow-cyan'
+                  : 'text-slate-400 hover:text-cyan-300'
+              }`}
+            >
+              <Box className="w-3.5 h-3.5" />
+              <span>3D Spatial</span>
+            </button>
+          </div>
+
           <button
             onClick={onOpenTransfer}
             className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 flex items-center gap-2 transition-all hover:border-cyan-500/40"
@@ -117,8 +152,20 @@ export const FloorPlanView: React.FC<FloorPlanViewProps> = ({ onOpenOrder, onOpe
       </div>
 
       {/* Visual Tables Canvas Area */}
-      <div className="flex-1 p-6 overflow-y-auto">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+      {viewMode === '3D' && !reducedMotion ? (
+        <div className="flex-1 p-4 flex flex-col">
+          <FloorPlan3D
+            tables={zoneTables}
+            selectedTableId={selectedTableId}
+            onSelectTable={(tableId) => {
+              selectTable(tableId);
+              onOpenOrder(tableId);
+            }}
+          />
+        </div>
+      ) : (
+        <div className="flex-1 p-6 overflow-y-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
           {zoneTables.map((table) => {
             const styles = getStatusStyles(table.status);
             const isSelected = selectedTableId === table.id;
@@ -183,6 +230,7 @@ export const FloorPlanView: React.FC<FloorPlanViewProps> = ({ onOpenOrder, onOpe
           })}
         </div>
       </div>
+      )}
     </div>
   );
 };
