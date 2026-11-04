@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { 
   Zap, Lock, Globe, Layers, ShieldCheck, Wifi, 
-  ChevronDown, Cpu, Sparkles 
+  ChevronDown, Cpu, Sparkles, HelpCircle 
 } from 'lucide-react';
 import { usePosStore } from '../../store/posStore';
 import { AppSwitcherModal } from '../modals/AppSwitcherModal';
+import { OnboardingTourModal } from '../modals/OnboardingTourModal';
 
 export const Navbar: React.FC = () => {
   const { 
@@ -14,6 +15,7 @@ export const Navbar: React.FC = () => {
   } = usePosStore();
 
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
+  const [isTourOpen, setIsTourOpen] = useState(false);
 
   const portalLabels: Record<string, string> = {
     POS_TERMINAL: 'POS Terminal',
@@ -25,6 +27,10 @@ export const Navbar: React.FC = () => {
     CUSTOMER_DISPLAY: 'Customer-Facing Display',
     RIDER_VIEW: 'Rider Mobile Dispatch',
     DESIGN_SYSTEM: 'Design System & Tokens',
+    CRM_HUB: 'Customer CRM',
+    RESERVATION_HUB: 'Reservations & Waitlist',
+    DELIVERY_HUB: 'Delivery & Dispatch',
+    SELF_KIOSK: 'Self-Service Touch Kiosk',
   };
 
   return (
@@ -89,6 +95,16 @@ export const Navbar: React.FC = () => {
             <span>Online</span>
           </div>
 
+          {/* Staff Training Tour Button */}
+          <button
+            onClick={() => setIsTourOpen(true)}
+            title="Start 5-Minute Staff Training Tour"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-xs font-semibold transition-all shadow-sm"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="hidden md:inline">Quick Tour</span>
+          </button>
+
           {/* Performance / 2D Mode Toggle */}
           <button
             onClick={toggleReducedMotion}
@@ -134,6 +150,12 @@ export const Navbar: React.FC = () => {
       {isSwitcherOpen && (
         <AppSwitcherModal onClose={() => setIsSwitcherOpen(false)} />
       )}
+
+      {/* Staff Training Tour Modal */}
+      <OnboardingTourModal
+        isOpen={isTourOpen}
+        onClose={() => setIsTourOpen(false)}
+      />
     </>
   );
 };
