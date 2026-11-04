@@ -47,7 +47,7 @@ export const DishShowcaseModal: React.FC<DishShowcaseModalProps> = ({ item, onCl
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
       <div className="w-full max-w-4xl glass-panel-elevated rounded-3xl overflow-hidden border border-white/20 shadow-2xl flex flex-col md:flex-row max-h-[92vh]">
         {/* Left: 3D Interactive Viewport */}
-        <div className="w-full md:w-1/2 h-[340px] md:h-auto relative bg-[#07090e] border-b md:border-b-0 md:border-r border-white/10 flex flex-col">
+        <div className="w-full md:w-1/2 h-[380px] md:h-[500px] min-h-[380px] relative bg-[#07090e] border-b md:border-b-0 md:border-r border-white/10 flex flex-col shrink-0">
           <DishPreview3D item={item} exploded={exploded} />
 
           {/* 3D Tools Controls Bottom Bar */}

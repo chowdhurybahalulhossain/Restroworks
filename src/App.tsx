@@ -18,7 +18,17 @@ import { LockScreenModal } from './components/modals/LockScreenModal';
 import { ManagerOverrideModal } from './components/modals/ManagerOverrideModal';
 
 export const App: React.FC = () => {
-  const { activePortal } = usePosStore();
+  const { activePortal, theme } = usePosStore();
+
+  React.useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.remove('light');
+      document.documentElement.classList.add('dark');
+    }
+  }, [theme]);
 
   const renderActivePortal = () => {
     switch (activePortal) {
@@ -54,7 +64,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-nova-bg text-slate-100 overflow-hidden font-sans">
+    <div className={`w-screen h-screen flex flex-col ${theme === 'light' ? 'bg-[#f4f6fb] text-slate-900' : 'bg-nova-bg text-slate-100'} overflow-hidden font-sans transition-colors duration-200`}>
       {/* Top Universal Operating Navigation Bar */}
       <Navbar />
 

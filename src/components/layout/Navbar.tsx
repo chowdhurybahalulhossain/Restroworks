@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Zap, Lock, Globe, Layers, ShieldCheck, Wifi, 
-  ChevronDown, Cpu, Sparkles, HelpCircle 
+  ChevronDown, Cpu, Sparkles, HelpCircle, Sun, Moon 
 } from 'lucide-react';
 import { usePosStore } from '../../store/posStore';
 import { AppSwitcherModal } from '../modals/AppSwitcherModal';
@@ -11,7 +11,7 @@ export const Navbar: React.FC = () => {
   const { 
     currentUser, tenant, branches, activeBranchId, setActiveBranchId,
     locale, toggleLocale, reducedMotion, toggleReducedMotion,
-    setIsLocked, activePortal
+    setIsLocked, activePortal, theme, toggleTheme
   } = usePosStore();
 
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
@@ -117,6 +117,25 @@ export const Navbar: React.FC = () => {
           >
             <Cpu className="w-3.5 h-3.5 text-cyan-400" />
             <span className="hidden sm:inline">{reducedMotion ? '2D Fast' : '3D Fluid'}</span>
+          </button>
+
+          {/* Theme Toggle: Dark / Light Mode */}
+          <button
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 transition-all hover:border-cyan-500/40"
+          >
+            {theme === 'dark' ? (
+              <>
+                <Sun className="w-3.5 h-3.5 text-amber-400" />
+                <span className="hidden sm:inline">Light</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="hidden sm:inline">Dark</span>
+              </>
+            )}
           </button>
 
           {/* Language Toggle */}

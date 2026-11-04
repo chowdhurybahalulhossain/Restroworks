@@ -23,11 +23,13 @@ interface PosState {
   activePortal: PortalApp;
   setActivePortal: (portal: PortalApp) => void;
 
-  // Language & Accessibility
+  // Language & Accessibility & Theme
   locale: 'en' | 'bn';
   toggleLocale: () => void;
   reducedMotion: boolean;
   toggleReducedMotion: () => void;
+  theme: 'dark' | 'light';
+  toggleTheme: () => void;
 
   // Multi-Tenancy
   tenant: Tenant;
@@ -123,6 +125,22 @@ export const usePosStore = create<PosState>((set, get) => ({
 
   reducedMotion: false,
   toggleReducedMotion: () => set((state) => ({ reducedMotion: !state.reducedMotion })),
+
+  theme: (typeof window !== 'undefined' && (localStorage.getItem('restroworks_theme') as 'dark' | 'light')) || 'dark',
+  toggleTheme: () => set((state) => {
+    const nextTheme = state.theme === 'dark' ? 'light' : 'dark';
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('restroworks_theme', nextTheme);
+      if (nextTheme === 'light') {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.remove('light');
+        document.documentElement.classList.add('dark');
+      }
+    }
+    return { theme: nextTheme };
+  }),
 
   tenant: SEED_TENANT,
   branches: SEED_BRANCHES,

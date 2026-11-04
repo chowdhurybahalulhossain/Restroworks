@@ -334,11 +334,12 @@ export const PosTerminalPortal: React.FC = () => {
                 tables={tables}
                 selectedTableId={selectedTableId}
                 onSelectTable={(tableId) => selectTable(tableId)}
+                onOpenOrder={(tableId) => {
+                  selectTable(tableId);
+                  setActiveTab('MENU');
+                }}
+                onOpenTransfer={() => setTransferModalOpen(true)}
               />
-              <div className="absolute top-4 left-4 z-10 glass-panel px-3 py-2 rounded-xl text-xs text-slate-300 border border-white/10 pointer-events-none">
-                <p className="font-semibold text-cyan-400">✨ 3D Spatial Floor</p>
-                <p className="text-[11px] text-slate-400">Click & drag to rotate • Scroll to zoom • Click table to select</p>
-              </div>
             </div>
           )}
 
@@ -479,7 +480,13 @@ export const PosTerminalPortal: React.FC = () => {
                           }`}
                         >
                           {/* Dish Image Banner with 3D Preview pill & Dietary Badges */}
-                          <div className="relative h-32 w-full overflow-hidden bg-slate-950/80">
+                          <div 
+                            onClick={() => {
+                              sound.playClick();
+                              setActiveShowcaseItem(item);
+                            }}
+                            className="relative h-32 w-full overflow-hidden bg-slate-950/80 cursor-pointer"
+                          >
                             {item.image ? (
                               <img
                                 src={item.image}
@@ -508,11 +515,11 @@ export const PosTerminalPortal: React.FC = () => {
                                   sound.playClick();
                                   setActiveShowcaseItem(item);
                                 }}
-                                className="pointer-events-auto px-2 py-0.5 rounded-lg bg-cyan-500/80 hover:bg-cyan-400 text-black text-[10px] font-bold flex items-center gap-1 shadow-md shadow-cyan-500/30 transition-transform active:scale-95"
-                                title="Inspect in 3D & Nutrition"
+                                className="pointer-events-auto px-2.5 py-1 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black text-[11px] font-bold flex items-center gap-1.5 shadow-lg shadow-cyan-500/40 transition-all hover:scale-105 active:scale-95"
+                                title="Inspect in 3D Gastronomy & Nutrition"
                               >
-                                <Box className="w-3 h-3" />
-                                <span>3D</span>
+                                <Box className="w-3.5 h-3.5" />
+                                <span>3D View</span>
                               </button>
                             </div>
 

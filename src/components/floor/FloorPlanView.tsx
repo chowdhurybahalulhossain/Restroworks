@@ -157,10 +157,9 @@ export const FloorPlanView: React.FC<FloorPlanViewProps> = ({ onOpenOrder, onOpe
           <FloorPlan3D
             tables={zoneTables}
             selectedTableId={selectedTableId}
-            onSelectTable={(tableId) => {
-              selectTable(tableId);
-              onOpenOrder(tableId);
-            }}
+            onSelectTable={(tableId) => selectTable(tableId)}
+            onOpenOrder={onOpenOrder}
+            onOpenTransfer={onOpenTransfer}
           />
         </div>
       ) : (

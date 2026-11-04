@@ -125,3 +125,56 @@ body {
 .animate-ticket-urgent {
   animation: ticketUrgent 1.2s infinite ease-in-out;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   LIGHT THEME ADAPTATION
+───────────────────────────────────────────────────────────── */
+html.light {
+  --nova-bg: #F4F6FB;
+  --nova-surface: #FFFFFF;
+  --nova-surface-elevated: #F8FAFC;
+  --nova-border: rgba(0, 0, 0, 0.08);
+  --nova-cyan: #0284C7;
+  --nova-emerald: #059669;
+  --nova-amber: #D97706;
+  --nova-crimson: #E11D48;
+}
+
+html.light body {
+  background-color: #F4F6FB;
+  color: #0F172A;
+}
+
+html.light .glass-panel {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #0F172A;
+}
+
+html.light .glass-panel-elevated {
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: #0F172A;
+}
+
+html.light .glass-card {
+  background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+html.light .glass-card:hover {
+  border-color: rgba(2, 132, 199, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.15);
+}
+
+html.light .glass-input {
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #0F172A;
+}
+
+html.light .glass-input:focus {
+  border-color: #0284C7;
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.2);
+}
