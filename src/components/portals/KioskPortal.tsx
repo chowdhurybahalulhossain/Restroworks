@@ -17,7 +17,11 @@ import { sound } from '../../services/soundFx';
 import confetti from 'canvas-confetti';
 
 export const KioskPortal: React.FC = () => {
-  const { menuItems, categories, cart, addToCart, removeFromCart, updateCartQuantity, clearCart, grandTotal, subtotal, taxAmount, fireCurrentOrderToKitchen, locale } = usePosStore();
+  const { 
+    menuItems, categories, cart, addToCart, removeCartItem, 
+    updateCartItemQuantity, clearCart, grandTotal, subtotal, 
+    taxAmount, fireCurrentOrderToKitchen, locale 
+  } = usePosStore();
 
   // Kiosk Flow States: 'ATTRACT' | 'ORDER_TYPE' | 'MENU' | 'CHECKOUT' | 'SUCCESS'
   const [kioskState, setKioskState] = useState<'ATTRACT' | 'ORDER_TYPE' | 'MENU' | 'CHECKOUT' | 'SUCCESS'>('ATTRACT');
@@ -398,7 +402,11 @@ export const KioskPortal: React.FC = () => {
                   <button
                     onClick={() => {
                       sound.playClick(500);
-                      updateCartQuantity(cartItem.id, cartItem.quantity - 1);
+                      if (cartItem.quantity === 1) {
+                        removeCartItem(cartItem.id);
+                      } else {
+                        updateCartItemQuantity(cartItem.id, -1);
+                      }
                     }}
                     className="w-7 h-7 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white"
                   >
@@ -410,7 +418,7 @@ export const KioskPortal: React.FC = () => {
                   <button
                     onClick={() => {
                       sound.playClick(700);
-                      updateCartQuantity(cartItem.id, cartItem.quantity + 1);
+                      updateCartItemQuantity(cartItem.id, 1);
                     }}
                     className="w-7 h-7 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white"
                   >
