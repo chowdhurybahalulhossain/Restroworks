@@ -58,22 +58,22 @@
 
 ---
 
-## Phase 3: Growth, Customer CRM & Online Channels
-- [ ] **TASK-3.1:** Customer CRM profiles, visit history, loyalty tier points earning & redemption.
-- [ ] **TASK-3.2:** Table reservations calendar, walk-in waitlist queue, SMS alert triggers.
-- [ ] **TASK-3.3:** Customer QR Table Ordering with live order status & waiter call signal.
-- [ ] **TASK-3.4:** Online delivery/takeaway web portal with delivery zones and dispatch engine.
-- [ ] **TASK-3.5:** Rider mobile view with live GPS mockup, proof of delivery, and COD cash settlement.
+## Phase 3: Growth, Customer CRM & Online Channels (Completed)
+- [x] **TASK-3.1:** Customer CRM profiles, visit history, loyalty tier points earning & redemption.
+- [x] **TASK-3.2:** Table reservations calendar, walk-in waitlist queue, SMS alert triggers.
+- [x] **TASK-3.3:** Customer QR Table Ordering with live order status & waiter call signal.
+- [x] **TASK-3.4:** Online delivery/takeaway web portal with delivery zones and dispatch engine.
+- [x] **TASK-3.5:** Rider mobile view with live GPS mockup, proof of delivery, and COD cash settlement.
 
 ---
 
-## Phase 4: Futuristic Experience & 3D Immersion
-- [ ] **TASK-4.1:** Interactive 3D Floor Plan (React Three Fiber) with real-time status lighting and orbit controls.
-- [ ] **TASK-4.2:** 3D Dish Previews with interactive rotation and nutrition overlays.
-- [ ] **TASK-4.3:** Live animated 3D executive charts, revenue globes, and sound haptics.
-- [ ] **TASK-4.4:** Self-Service Kiosk mode with attract loop screensaver.
-- [ ] **TASK-4.5:** Secondary Customer-Facing Display (CFD) with synchronized cart and payment QR.
-- [ ] **TASK-4.6:** "Performance Mode / Reduce Motion" instant fallback toggle.
+## Phase 4: Futuristic Experience & 3D Immersion (Completed)
+- [x] **TASK-4.1:** Interactive 3D Floor Plan (React Three Fiber) with real-time status lighting and orbit controls.
+- [x] **TASK-4.2:** 3D Dish Previews with interactive rotation and nutrition overlays.
+- [x] **TASK-4.3:** Live animated 3D executive charts, revenue globes, and sound haptics.
+- [x] **TASK-4.4:** Self-Service Kiosk mode with attract loop screensaver.
+- [x] **TASK-4.5:** Secondary Customer-Facing Display (CFD) with synchronized cart and payment QR.
+- [x] **TASK-4.6:** "Performance Mode / Reduce Motion" instant fallback toggle.
 
 ---
 

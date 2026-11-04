@@ -29,22 +29,25 @@
 | **FR-PAY-002** | SSLCOMMERZ Hosted & IPN Validation | `payment/` | `TC-PAY-02: Server validates val_id before bill settles` | Phase 1 | 🟢 Verified (13/13 Tests Pass) |
 | **FR-PAY-003** | Cashier Shifts, X-Report & Z-Report | `shift/` | `TC-PAY-03: Shift close calculates cash drawer variance` | Phase 1 | 🟢 Verified (13/13 Tests Pass) |
 | **FR-SET-001** | ESC/POS Thermal Printer & Cash Drawer | `hardware/` | `TC-SET-01: Generates valid ESC/POS byte buffers` | Phase 1 | 🟢 Verified (13/13 Tests Pass) |
-| **FR-CRM-001** | Customer Lookup & Visit History | `crm/` | `TC-CRM-01: Lookup by phone shows past orders & tags` | Phase 3 | ⚪ Planned |
-| **FR-CRM-002** | Loyalty Tier Points & Redemptions | `crm/` | `TC-CRM-02: Points accrued on payment, redeemable in bill` | Phase 3 | ⚪ Planned |
-| **FR-RES-001** | Table Reservations & Waitlist | `reservation/`| `TC-RES-01: Table hold conflicts blocked` | Phase 3 | ⚪ Planned |
-| **FR-ONLINE-001**| Customer QR Table Ordering | `online/` | `TC-ONL-01: Dine-in QR order arrives at POS/KDS` | Phase 3 | 🟢 Prototype Implemented |
-| **FR-ONLINE-002**| Online Delivery & Rider Dispatch | `online/` | `TC-ONL-02: Delivery order assigned to Rider with COD` | Phase 3 | 🟢 Prototype Implemented |
-| **FR-INV-001** | Recipe BOM & FIFO Stock Depletion | `inventory/` | `TC-INV-01: Sale of Burger reduces Bun & Patty stock` | Phase 2 | 🟢 Verified (19/19 Tests Pass) |
-| **FR-INV-002** | Spoilage, PO & GRN Ingestion | `inventory/` | `TC-INV-02: PO receipt increases inventory par level` | Phase 2 | 🟢 Verified (19/19 Tests Pass) |
-| **FR-HR-001** | Quick PIN Time Clock & Attendance | `hr/` | `TC-HR-01: Clock-in logs time, breaks and overtime` | Phase 2 | 🟢 Verified (19/19 Tests Pass) |
-| **FR-FIN-001** | Double-Entry Ledgers & Accounting | `finance/` | `TC-FIN-01: Sales journal auto-posts debit/credit` | Phase 2 | 🟢 Verified (19/19 Tests Pass) |
-| **FR-RPT-001** | Real-time Analytics & Fraud Alerts | `reports/` | `TC-RPT-01: Top items, sales heatmap, void anomalies` | Phase 1/2 | 🟢 Verified (19/19 Tests Pass) |
-| **FR-SET-001** | ESC/POS Thermal Printer & Cash Drawer | `hardware/` | `TC-SET-01: Generates valid ESC/POS byte buffers` | Phase 1 | 🟡 In Progress |
-| **FR-CFD-001** | Customer-Facing Display Second Screen | `cfd/` | `TC-CFD-01: Live cart reflects on secondary screen` | Phase 4 | 🟢 Prototype Implemented |
+| **FR-CRM-001** | Customer Lookup & Visit History | `crm/` | `TC-CRM-01: Lookup by phone shows past orders & tags` | Phase 3 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-CRM-002** | Loyalty Tier Points & Redemptions | `crm/` | `TC-CRM-02: Points accrued on payment, redeemable in bill` | Phase 3 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-RES-001** | Table Reservations & Waitlist | `reservation/`| `TC-RES-01: Table hold conflicts blocked` | Phase 3 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-ONLINE-001**| Customer QR Table Ordering | `online/` | `TC-ONL-01: Dine-in QR order arrives at POS/KDS` | Phase 3 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-ONLINE-002**| Online Delivery & Rider Dispatch | `online/` | `TC-ONL-02: Delivery order assigned to Rider with COD` | Phase 3 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-INV-001** | Recipe BOM & FIFO Stock Depletion | `inventory/` | `TC-INV-01: Sale of Burger reduces Bun & Patty stock` | Phase 2 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-INV-002** | Spoilage, PO & GRN Ingestion | `inventory/` | `TC-INV-02: PO receipt increases inventory par level` | Phase 2 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-HR-001** | Quick PIN Time Clock & Attendance | `hr/` | `TC-HR-01: Clock-in logs time, breaks and overtime` | Phase 2 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-FIN-001** | Double-Entry Ledgers & Accounting | `finance/` | `TC-FIN-01: Sales journal auto-posts debit/credit` | Phase 2 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-RPT-001** | Real-time Analytics & Fraud Alerts | `reports/` | `TC-RPT-01: Top items, sales heatmap, void anomalies` | Phase 1/2 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-SET-001** | ESC/POS Thermal Printer & Cash Drawer | `hardware/` | `TC-SET-01: Generates valid ESC/POS byte buffers` | Phase 1 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-3D-001** | 3D Spatial Floor Plan & Orbit Controls | `3d/` | `TC-PHASE4-02: Real-time table status lighting` | Phase 4 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-3D-002** | 3D Dish Showcase & Nutrition HUD | `3d/` | `TC-PHASE4-03: Rotatable 360 dish & macro HUD` | Phase 4 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-KIOSK-001** | Self-Service Touch Kiosk & Attract Loop | `kiosk/` | `TC-PHASE4-04: Kiosk token & automatic KOT fire` | Phase 4 | 🟢 Verified (25/25 Tests Pass) |
+| **FR-CFD-001** | Customer-Facing Display Second Screen | `cfd/` | `TC-CFD-01: Live cart reflects on secondary screen` | Phase 4 | 🟢 Verified (25/25 Tests Pass) |
 | **NFR-PERF-01** | < 50ms Cart Interaction Latency | `core/` | `TC-NFR-01: 100 item clicks benchmarks < 50ms` | Phase 0-5 | 🟢 Verified |
 | **NFR-OFFLINE-01**| > 24h Offline Operation & Outbox Sync | `sync/` | `TC-NFR-02: Disconnected orders sync with no loss` | Phase 1 | 🟢 Implemented |
 | **NFR-SEC-01** | PCI-DSS SAQ-A & Strict Tenant Bounds | `core/` | `TC-NFR-03: Zero card data stored; tenant checks pass`| Phase 0-5 | 🟢 Verified |
-| **NFR-ANIM-01** | 60 FPS UI & Instant 2D Fallback | `ui/` | `TC-NFR-04: Performance toggle disables heavy 3D` | Phase 0/4 | 🟢 Implemented |
+| **NFR-ANIM-01** | 60 FPS UI & Instant 2D Fallback | `ui/` | `TC-NFR-04: Performance toggle disables heavy 3D` | Phase 0/4 | 🟢 Verified (25/25 Tests Pass) |
 
 ---
-*Traceability Matrix Updated for Phase 0.*
+*Traceability Matrix Updated for Phase 4 Baseline.*
