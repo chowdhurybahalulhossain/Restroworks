@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   X, Monitor, ChefHat, BarChart3, QrCode, 
   Smartphone, Tv, Bike, Palette, Check,
-  Users, Calendar, Truck
+  Users, Calendar, Truck, Sparkles
 } from 'lucide-react';
 import { usePosStore } from '../../store/posStore';
 import { PortalApp } from '../../types';
@@ -111,6 +111,14 @@ export const AppSwitcherModal: React.FC<AppSwitcherModalProps> = ({ onClose }) =
       color: 'from-orange-500 to-red-600',
       tag: 'Phase 3 · Delivery',
     },
+    {
+      id: 'SELF_KIOSK',
+      name: 'Self-Service Touch Kiosk',
+      desc: 'Attract loop screensaver, touch ordering, eat-in/takeaway, and token checkout',
+      icon: Sparkles,
+      color: 'from-pink-500 to-rose-600',
+      tag: 'Phase 4 · Kiosk',
+    },
   ];
 
   const handleSelect = (appId: PortalApp) => {
@@ -127,7 +135,7 @@ export const AppSwitcherModal: React.FC<AppSwitcherModalProps> = ({ onClose }) =
             <h2 className="text-xl font-display font-bold text-white flex items-center gap-2">
               <span>NOVAPOS Multi-Application Suite</span>
               <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-mono">
-                8 Apps Included
+                12 Portals Included
               </span>
             </h2>
             <p className="text-sm text-slate-400 mt-0.5">

@@ -13,6 +13,7 @@ import { DesignSystemPortal } from './components/portals/DesignSystemPortal';
 import { CrmPortal } from './components/portals/CrmPortal';
 import { ReservationPortal } from './components/portals/ReservationPortal';
 import { DeliveryPortal } from './components/portals/DeliveryPortal';
+import { KioskPortal } from './components/portals/KioskPortal';
 import { LockScreenModal } from './components/modals/LockScreenModal';
 import { ManagerOverrideModal } from './components/modals/ManagerOverrideModal';
 
@@ -45,6 +46,8 @@ export const App: React.FC = () => {
         return <ReservationPortal />;
       case 'DELIVERY_HUB':
         return <DeliveryPortal />;
+      case 'SELF_KIOSK':
+        return <KioskPortal />;
       default:
         return <PosTerminalPortal />;
     }

@@ -392,4 +392,6 @@ export type PortalApp =
   // Phase 3 portals
   | 'CRM_HUB'
   | 'RESERVATION_HUB'
-  | 'DELIVERY_HUB';
+  | 'DELIVERY_HUB'
+  // Phase 4 portals
+  | 'SELF_KIOSK';
