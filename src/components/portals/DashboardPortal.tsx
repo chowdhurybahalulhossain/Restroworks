@@ -4,6 +4,7 @@ import {
   Store, Award, Clock, ArrowUpRight, ShieldCheck 
 } from 'lucide-react';
 import { usePosStore } from '../../store/posStore';
+import { ExecutiveGlobe3D } from '../3d/ExecutiveGlobe3D';
 
 export const DashboardPortal: React.FC = () => {
   const { currentShift, auditLogs, branches, menuItems } = usePosStore();
@@ -64,6 +65,9 @@ export const DashboardPortal: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* 3D Multi-Branch Revenue Globe Visualizer */}
+      <ExecutiveGlobe3D />
 
       {/* Main Grid: Multi-Branch & Top Dishes */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
