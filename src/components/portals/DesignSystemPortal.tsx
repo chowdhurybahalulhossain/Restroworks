@@ -19,7 +19,7 @@ export const DesignSystemPortal: React.FC = () => {
       <div>
         <div className="flex items-center gap-2 mb-1">
           <Palette className="w-5 h-5 text-cyan-400" />
-          <h2 className="text-xl font-display font-bold text-white">NOVAPOS Design System & Component Library</h2>
+          <h2 className="text-xl font-display font-bold text-white">Restroworks Design System & Component Library</h2>
         </div>
         <p className="text-xs text-slate-400">
           Cyber-Luxe restaurant operating system tokens, micro-interactions, and accessibility specifications.

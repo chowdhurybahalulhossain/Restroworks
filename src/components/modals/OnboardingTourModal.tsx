@@ -37,7 +37,7 @@ const TOUR_STEPS: TourStep[] = [
     icon: Monitor,
     color: 'from-cyan-500 to-blue-600',
     badge: 'Navigation & Portals',
-    description: 'NOVAPOS provides role-tailored workspaces for every staff member. Switch instantaneously between Cashier POS, KDS, Floor Plan, Inventory Hub, and Kiosk.',
+    description: 'Restroworks provides role-tailored workspaces for every staff member. Switch instantaneously between Cashier POS, KDS, Floor Plan, Inventory Hub, and Kiosk.',
     highlights: [
       'Top Navigation Bar gives instant access to the App Switcher (12 Portals).',
       '4-Digit PIN Quick Switch allows servers to change without logging out.',
@@ -150,7 +150,7 @@ export const OnboardingTourModal: React.FC<OnboardingTourModalProps> = ({ isOpen
             </div>
             <div>
               <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <span>NOVAPOS 5-Minute Staff Training Tour</span>
+                <span>Restroworks 5-Minute Staff Training Tour</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-mono font-bold">
                   Step {step.step} of {TOUR_STEPS.length}
                 </span>

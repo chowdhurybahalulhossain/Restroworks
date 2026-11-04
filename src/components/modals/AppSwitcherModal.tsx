@@ -133,7 +133,7 @@ export const AppSwitcherModal: React.FC<AppSwitcherModalProps> = ({ onClose }) =
         <div className="p-6 border-b border-white/10 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-display font-bold text-white flex items-center gap-2">
-              <span>NOVAPOS Multi-Application Suite</span>
+              <span>Restroworks Multi-Application Suite</span>
               <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-mono">
                 12 Portals Included
               </span>

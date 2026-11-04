@@ -73,9 +73,9 @@ export const PosTerminalPortal: React.FC = () => {
     } else if (code === 'WELCOME10') {
       setDiscountPercentage(10);
       setPromoMsg({ text: 'Promo WELCOME10 Applied (10% Off)', success: true });
-    } else if (code === 'NOVAPOS') {
+    } else if (code === 'RESTROWORKS' || code === 'NOVAPOS') {
       setDiscountPercentage(15);
-      setPromoMsg({ text: 'Promo NOVAPOS Applied (15% Off)', success: true });
+      setPromoMsg({ text: 'Promo RESTROWORKS Applied (15% Off)', success: true });
     } else {
       setPromoMsg({ text: 'Invalid promo code', success: false });
     }

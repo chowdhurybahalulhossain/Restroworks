@@ -100,7 +100,7 @@ export const KioskPortal: React.FC = () => {
         <div className="z-10 text-center animate-fade-in">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-cyan-400 mb-3">
             <Sparkles className="w-4 h-4 text-cyan-400 animate-spin-slow" />
-            <span>NOVAPOS ENTERPRISE TOUCH KIOSK</span>
+            <span>RESTROWORKS ENTERPRISE TOUCH KIOSK</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-display font-extrabold text-white tracking-tight">
             Novasphere Bistro

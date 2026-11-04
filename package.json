@@ -1,8 +1,8 @@
 {
-  "name": "novapos",
+  "name": "restroworks",
   "version": "1.0.0",
   "private": true,
-  "description": "NOVAPOS - Futuristic Enterprise Restaurant POS & Operating System",
+  "description": "Restroworks - Futuristic Enterprise Restaurant POS & Operating System",
   "type": "module",
   "scripts": {
     "dev": "vite",

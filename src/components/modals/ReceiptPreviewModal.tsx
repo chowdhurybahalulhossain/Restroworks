@@ -126,7 +126,7 @@ export const ReceiptPreviewModal: React.FC<ReceiptPreviewModalProps> = ({ bill, 
               </div>
               <p className="font-bold">Scan for E-Receipt & Loyalty</p>
               <p className="text-[9px] text-neutral-600">Thank you for dining at Novasphere!</p>
-              <p className="text-[8px] text-neutral-500 font-sans mt-1">NOVAPOS Enterprise v1.0</p>
+              <p className="text-[8px] text-neutral-500 font-sans mt-1">Restroworks Enterprise v1.0</p>
             </div>
           </div>
         </div>

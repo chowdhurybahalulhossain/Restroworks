@@ -81,7 +81,7 @@ export const DishShowcaseModal: React.FC<DishShowcaseModalProps> = ({ item, onCl
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 font-bold">
-                  NOVAPOS 3D GASTRONOMY
+                  RESTROWORKS 3D GASTRONOMY
                 </span>
                 <h2 className="text-2xl font-display font-extrabold text-white mt-0.5">
                   {isBn ? item.nameBn : item.nameEn}
@@ -222,3 +222,4 @@ export const DishShowcaseModal: React.FC<DishShowcaseModalProps> = ({ item, onCl
     </div>
   );
 };
+
