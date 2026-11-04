@@ -264,3 +264,4 @@ export const ExecutiveGlobe3D: React.FC = () => {
     </div>
   );
 };
+

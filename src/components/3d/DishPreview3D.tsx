@@ -344,3 +344,4 @@ export const DishPreview3D: React.FC<DishPreview3DProps> = ({ item, exploded = f
     </div>
   );
 };
+
